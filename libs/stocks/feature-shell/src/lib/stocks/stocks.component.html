@@ -1,32 +1,32 @@
 <form [formGroup]="stockPickerForm">
   <mat-form-field>
-    <input
-      matInput
-      placeholder="Symbol e.g AAPL"
-      formControlName="symbol"
-      value=""
-    />
-    <mat-error
-      ><span
-        *ngIf="
+    <input matInput placeholder="Symbol e.g AAPL" formControlName="symbol" value="" />
+    <mat-error><span *ngIf="
           !stockPickerForm.get('symbol').valid &&
           stockPickerForm.get('symbol').touched
-        "
-        >Please enter a symbol</span
-      >
+        ">Please enter a symbol</span>
     </mat-error>
   </mat-form-field>
 
   <mat-form-field>
-    <mat-label>Favorite time period</mat-label>
-    <mat-select formControlName="period">
-      <mat-option
-        *ngFor="let timePeriod of timePeriods"
-        [value]="timePeriod.value"
-      >
-        {{ timePeriod.viewValue }}
-      </mat-option>
-    </mat-select>
+    <input matInput [max]="maxdate" formControlName="startDate" [matDatepicker]="frompicker"
+      placeholder="From date (MM/DD/YYYY)">
+    <mat-datepicker-toggle matSuffix [for]="frompicker"></mat-datepicker-toggle>
+    <mat-datepicker #frompicker></mat-datepicker>
+    <mat-error *ngIf="stockPickerForm.get('startDate').invalid && stockPickerForm.get('startDate').touched">
+      <span>
+        Please select From date</span>
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput [min]="stockPickerForm.get('startDate').value" [max]="maxdate" [matDatepicker]="topicker"
+      placeholder="To date (MM/DD/YYYY)" formControlName="endDate">
+    <mat-datepicker-toggle matSuffix [for]="topicker"></mat-datepicker-toggle>
+    <mat-datepicker #topicker></mat-datepicker>
+    <mat-error *ngIf="stockPickerForm.get('endDate').invalid && stockPickerForm.get('endDate').touched">
+      <span>
+        Please select To date</span>
+    </mat-error>
   </mat-form-field>
 
   <button (click)="fetchQuote()" mat-raised-button>Go</button>

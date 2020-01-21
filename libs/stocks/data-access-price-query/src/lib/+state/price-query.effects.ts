@@ -15,6 +15,7 @@ import {
 } from './price-query.actions';
 import { PriceQueryPartialState } from './price-query.reducer';
 import { PriceQueryResponse } from './price-query.type';
+import { DatePipe } from '@angular/common';
 
 @Injectable()
 export class PriceQueryEffects {
@@ -29,7 +30,17 @@ export class PriceQueryEffects {
             }?token=${this.env.apiKey}`
           )
           .pipe(
-            map(resp => new PriceQueryFetched(resp as PriceQueryResponse[]))
+            map((resp: any[]) => {
+              return resp.filter(item => {
+                const date = this.datepipe.transform(item.date,'yyyy-MM-dd');
+                const startDate= this.datepipe.transform(action.startDate,'yyyy-MM-dd');
+                const endDate = this.datepipe.transform(action.endDate,'yyyy-MM-dd');
+                return startDate <= date && endDate >= date;
+              });
+            }),
+            map(resp => {
+              return new PriceQueryFetched(resp as PriceQueryResponse[]);
+            })
           );
       },
 
@@ -42,6 +53,7 @@ export class PriceQueryEffects {
   constructor(
     @Inject(StocksAppConfigToken) private env: StocksAppConfig,
     private httpClient: HttpClient,
-    private dataPersistence: DataPersistence<PriceQueryPartialState>
+    private dataPersistence: DataPersistence<PriceQueryPartialState>,
+    private datepipe:DatePipe
   ) {}
 }

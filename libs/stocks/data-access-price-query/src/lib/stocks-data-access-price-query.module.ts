@@ -9,7 +9,7 @@ import {
   priceQueryReducer,
   PRICEQUERY_FEATURE_KEY
 } from './+state/price-query.reducer';
-
+import { DatePipe } from '@angular/common';
 @NgModule({
   imports: [
     CommonModule,
@@ -17,6 +17,6 @@ import {
     StoreModule.forFeature(PRICEQUERY_FEATURE_KEY, priceQueryReducer),
     EffectsModule.forFeature([PriceQueryEffects])
   ],
-  providers: [PriceQueryFacade]
+  providers: [PriceQueryFacade,DatePipe]
 })
 export class StocksDataAccessPriceQueryModule {}
